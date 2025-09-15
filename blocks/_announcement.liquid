@@ -1,5 +1,4 @@
 
-
 {%- assign block_settings = block.settings -%}
 {%- assign plain_text = block_settings.text | strip_newlines | strip_html | strip -%}
 {%- assign block_index = section.blocks | find_index: 'id', block.id -%}
@@ -22,6 +21,7 @@
       --width: 100%;
       --text-align: center;
       --line-height: 1;
+      {% if block_settings.text_color != blank %}color: {{ block_settings.text_color }};{% endif %}
     "
     {{ block.shopify_attributes }}
     aria-hidden="{% if block_index == 0 %}false{% else %}true{% endif %}"
@@ -320,6 +320,12 @@
         }
       ],
       "default": "none"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
     }
   ],
   "presets": [
