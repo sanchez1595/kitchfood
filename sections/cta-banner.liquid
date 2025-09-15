@@ -1,0 +1,555 @@
+<section 
+  class="cta-banner color-{{ section.settings.color_scheme }}"
+  style="
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --banner-bg-color: {{ section.settings.background_color }};
+    --text-color: {{ section.settings.text_color }};
+    --accent-color: {{ section.settings.accent_color }};
+    --primary-button-bg: {{ section.settings.primary_button_background }};
+    --primary-button-text: {{ section.settings.primary_button_text }};
+    --secondary-button-color: {{ section.settings.secondary_button_color }};
+  "
+>
+  <div class="cta-banner__container">
+    <div class="cta-banner__content">
+      <!-- Product Image -->
+      <div class="cta-banner__image-wrapper">
+        {% if section.settings.product_image %}
+          <div class="cta-banner__image">
+            <img 
+              src="{{ section.settings.product_image | image_url: width: 500 }}"
+              alt="{{ section.settings.product_image.alt | escape }}"
+              width="{{ section.settings.product_image.width }}"
+              height="{{ section.settings.product_image.height }}"
+              loading="lazy"
+            >
+          </div>
+        {% else %}
+          <div class="cta-banner__image-placeholder">
+            <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+              <rect width="120" height="120" fill="rgba(255,255,255,0.1)" rx="8"/>
+              <path d="M40 50L60 70L80 50" stroke="rgba(255,255,255,0.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="60" cy="40" r="8" fill="rgba(255,255,255,0.5)"/>
+            </svg>
+            <p>Imagen del producto</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Text Content -->
+      <div class="cta-banner__text-content">
+        {% if section.settings.subtitle != blank %}
+          <div class="cta-banner__subtitle">{{ section.settings.subtitle }}</div>
+        {% endif %}
+        
+        {% if section.settings.heading != blank %}
+          <h2 class="cta-banner__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+        
+        {% if section.settings.description != blank %}
+          <p class="cta-banner__description">{{ section.settings.description }}</p>
+        {% endif %}
+
+        <div class="cta-banner__buttons">
+          {% if section.settings.primary_button_text != blank %}
+            <a 
+              href="{{ section.settings.primary_button_link | default: '#' }}" 
+              class="cta-banner__button cta-banner__button--primary"
+              {% if section.settings.primary_button_link == blank %}onclick="return false;"{% endif %}
+              {% if section.settings.open_primary_in_new_tab %}target="_blank" rel="noopener"{% endif %}
+            >
+              {{ section.settings.primary_button_text }}
+            </a>
+          {% endif %}
+
+          {% if section.settings.secondary_button_text != blank %}
+            <a 
+              href="{{ section.settings.secondary_button_link | default: '#' }}" 
+              class="cta-banner__button cta-banner__button--secondary"
+              {% if section.settings.secondary_button_link == blank %}onclick="return false;"{% endif %}
+              {% if section.settings.open_secondary_in_new_tab %}target="_blank" rel="noopener"{% endif %}
+            >
+              {{ section.settings.secondary_button_text }}
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Decorative Elements -->
+      {% if section.settings.show_decorative_elements %}
+        <div class="cta-banner__decorative">
+          <div class="cta-banner__accent-line"></div>
+          <div class="cta-banner__accent-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .cta-banner {
+    padding: var(--section-padding-top, 80px) 0 var(--section-padding-bottom, 80px);
+    background-color: var(--banner-bg-color, #000000);
+    color: var(--text-color, #ffffff);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-banner__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .cta-banner__content {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+  }
+
+  .cta-banner__image-wrapper {
+    position: relative;
+    z-index: 2;
+  }
+
+  .cta-banner__image {
+    width: 200px;
+    height: 200px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+  }
+
+  .cta-banner:hover .cta-banner__image {
+    transform: scale(1.02);
+  }
+
+  .cta-banner__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .cta-banner__image-placeholder {
+    width: 200px;
+    height: 200px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: rgba(255, 255, 255, 0.6);
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+  }
+
+  .cta-banner__image-placeholder p {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .cta-banner__text-content {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .cta-banner__subtitle {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent-color, #ff6b35);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+  }
+
+  .cta-banner__heading {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    margin: 0 0 1.5rem 0;
+    line-height: 1.1;
+    color: var(--text-color, #ffffff);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  .cta-banner__description {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin: 0 0 2.5rem 0;
+    color: var(--text-color, #ffffff);
+    opacity: 0.8;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2.5rem;
+  }
+
+  .cta-banner__buttons {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .cta-banner__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-banner__button--primary {
+    background-color: var(--primary-button-bg, #ff6b35);
+    color: var(--primary-button-text, #ffffff);
+    padding: 1.2rem 3rem;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+  }
+
+  .cta-banner__button--primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+  }
+
+  .cta-banner__button--secondary {
+    background-color: transparent;
+    color: var(--secondary-button-color, #ffffff);
+    border-color: rgba(255, 255, 255, 0.3);
+    padding: 1rem 2rem;
+  }
+
+  .cta-banner__button--secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateX(4px);
+  }
+
+  .cta-banner__button--secondary svg {
+    transition: transform 0.3s ease;
+  }
+
+  .cta-banner__button--secondary:hover svg {
+    transform: translateX(2px);
+  }
+
+  .cta-banner__decorative {
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-banner__accent-line {
+    width: 3px;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, var(--accent-color, #ff6b35), transparent);
+    margin-bottom: 1rem;
+  }
+
+  .cta-banner__accent-dots {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .cta-banner__accent-dots span {
+    width: 8px;
+    height: 8px;
+    background-color: var(--accent-color, #ff6b35);
+    border-radius: 50%;
+    opacity: 0.6;
+  }
+
+  .cta-banner__accent-dots span:nth-child(2) {
+    opacity: 0.8;
+  }
+
+  .cta-banner__accent-dots span:nth-child(3) {
+    opacity: 1;
+  }
+
+  /* Background Pattern */
+  .cta-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.05) 0%, transparent 50%);
+    z-index: 0;
+  }
+
+  /* Responsive Design */
+  @media screen and (max-width: 968px) {
+    .cta-banner__content {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      text-align: center;
+    }
+
+    .cta-banner__decorative {
+      display: none;
+    }
+
+    .cta-banner__image,
+    .cta-banner__image-placeholder {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .cta-banner {
+      padding: 60px 0;
+    }
+
+    .cta-banner__container {
+      padding: 0 1rem;
+    }
+
+    .cta-banner__content {
+      gap: 2rem;
+    }
+
+    .cta-banner__heading {
+      font-size: clamp(1.8rem, 8vw, 2.5rem);
+      margin-bottom: 1rem;
+    }
+
+    .cta-banner__description {
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .cta-banner__buttons {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .cta-banner__button--primary {
+      padding: 1rem 2rem;
+    }
+
+    .cta-banner__button--secondary {
+      justify-content: center;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .cta-banner__image,
+    .cta-banner__image-placeholder {
+      width: 120px;
+      height: 120px;
+    }
+
+    .cta-banner__button {
+      font-size: 0.9rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CTA Banner",
+  "tag": "section",
+  "class": "cta-banner-wrapper section-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "DESCARGA GRATIS"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "CATÁLOGO NORDIC"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Descubre toda nuestra línea de equipos profesionales para cocina. Especificaciones técnicas, características y precios actualizados."
+    },
+    {
+      "type": "header",
+      "content": "Primary Button"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_text",
+      "label": "Primary button text",
+      "default": "DESCARGAR"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_primary_in_new_tab",
+      "label": "Open primary link in new tab",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Secondary Button"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text",
+      "label": "Secondary button text",
+      "default": "VER MÁS"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_secondary_in_new_tab",
+      "label": "Open secondary link in new tab",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Product Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product image"
+    },
+    {
+      "type": "header",
+      "content": "Design"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_decorative_elements",
+      "label": "Show decorative elements",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#ff6b35"
+    },
+    {
+      "type": "color",
+      "id": "primary_button_background",
+      "label": "Primary button background",
+      "default": "#ff6b35"
+    },
+    {
+      "type": "color",
+      "id": "primary_button_text",
+      "label": "Primary button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_color",
+      "label": "Secondary button color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "CTA Banner",
+      "category": "Promotional",
+      "settings": {
+        "subtitle": "DESCARGA GRATIS",
+        "heading": "CATÁLOGO NORDIC",
+        "description": "Descubre toda nuestra línea de equipos profesionales para cocina. Especificaciones técnicas, características y precios actualizados.",
+        "primary_button_text": "DESCARGAR",
+        "secondary_button_text": "VER MÁS",
+        "show_decorative_elements": true
+      }
+    }
+  ]
+}
+{% endschema %}

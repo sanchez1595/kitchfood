@@ -1,0 +1,601 @@
+<section 
+  class="distributors-brands color-{{ section.settings.color_scheme }}"
+  style="
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --section-bg-color: {{ section.settings.background_color }};
+    --text-color: {{ section.settings.text_color }};
+    --logo-opacity: {{ section.settings.logo_opacity | divided_by: 100.0 }};
+    --logo-hover-opacity: {{ section.settings.logo_hover_opacity | divided_by: 100.0 }};
+  "
+>
+  <div class="distributors-brands__container">
+    {% if section.settings.heading != blank %}
+      <div class="distributors-brands__header">
+        <h2 class="distributors-brands__heading">{{ section.settings.heading }}</h2>
+        {% if section.settings.subheading != blank %}
+          <p class="distributors-brands__subheading">{{ section.settings.subheading }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="distributors-brands__logos">
+      <div class="distributors-brands__logos-container">
+        {% if section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+            <div class="distributors-brands__logo-item" {{ block.shopify_attributes }}>
+              {% if block.settings.link %}
+                <a 
+                  href="{{ block.settings.link }}" 
+                  class="distributors-brands__logo-link"
+                  {% if block.settings.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}
+                  aria-label="Visit {{ block.settings.brand_name | default: 'brand website' }}"
+                >
+              {% endif %}
+              
+              <div class="distributors-brands__logo">
+                {% if block.settings.logo %}
+                  <img 
+                    src="{{ block.settings.logo | image_url: width: 200 }}"
+                    alt="{{ block.settings.logo.alt | escape | default: block.settings.brand_name }}"
+                    width="200"
+                    height="auto"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="distributors-brands__logo-placeholder">
+                    {% if block.settings.brand_name != blank %}
+                      <span>{{ block.settings.brand_name }}</span>
+                    {% else %}
+                      <svg width="80" height="40" viewBox="0 0 80 40" fill="none">
+                        <rect width="80" height="40" fill="currentColor" opacity="0.1" rx="4"/>
+                        <text x="40" y="24" text-anchor="middle" fill="currentColor" font-family="Arial" font-size="10" opacity="0.6">LOGO</text>
+                      </svg>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </div>
+              
+              {% if block.settings.link %}</a>{% endif %}
+            </div>
+          {% endfor %}
+        {% else %}
+          <!-- Default logos when no blocks exist -->
+          {% assign default_brands = 'unimac,JBE,Alpromec,BC,Nordic' | split: ',' %}
+          {% for brand in default_brands %}
+            <div class="distributors-brands__logo-item">
+              <div class="distributors-brands__logo">
+                <div class="distributors-brands__logo-placeholder">
+                  <span>{{ brand }}</span>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    {% if section.settings.show_scroll_animation %}
+      <!-- Duplicate logos for infinite scroll effect -->
+      <div class="distributors-brands__logos distributors-brands__logos--duplicate" aria-hidden="true">
+        <div class="distributors-brands__logos-container">
+          {% if section.blocks.size > 0 %}
+            {% for block in section.blocks %}
+              <div class="distributors-brands__logo-item">
+                <div class="distributors-brands__logo">
+                  {% if block.settings.logo %}
+                    <img 
+                      src="{{ block.settings.logo | image_url: width: 200 }}"
+                      alt=""
+                      width="200"
+                      height="auto"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    <div class="distributors-brands__logo-placeholder">
+                      {% if block.settings.brand_name != blank %}
+                        <span>{{ block.settings.brand_name }}</span>
+                      {% else %}
+                        <svg width="80" height="40" viewBox="0 0 80 40" fill="none">
+                          <rect width="80" height="40" fill="currentColor" opacity="0.1" rx="4"/>
+                          <text x="40" y="24" text-anchor="middle" fill="currentColor" font-family="Arial" font-size="10" opacity="0.6">LOGO</text>
+                        </svg>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            {% assign default_brands = 'unimac,JBE,Alpromec,BC,Nordic' | split: ',' %}
+            {% for brand in default_brands %}
+              <div class="distributors-brands__logo-item">
+                <div class="distributors-brands__logo">
+                  <div class="distributors-brands__logo-placeholder">
+                    <span>{{ brand }}</span>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .distributors-brands {
+    padding: var(--section-padding-top, 60px) 0 var(--section-padding-bottom, 60px);
+    background-color: var(--section-bg-color, #ffffff);
+    overflow: hidden;
+  }
+
+  .distributors-brands__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .distributors-brands__header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .distributors-brands__heading {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    color: var(--text-color, #333333);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+
+  .distributors-brands__subheading {
+    font-size: 1rem;
+    color: var(--text-color, #333333);
+    opacity: 0.8;
+    margin: 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .distributors-brands__logos {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .distributors-brands__logos-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+  }
+
+  /* Scroll Animation */
+  .distributors-brands[data-scroll="true"] .distributors-brands__logos-container {
+    animation: scroll-logos 30s linear infinite;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    width: max-content;
+  }
+
+  .distributors-brands[data-scroll="true"] .distributors-brands__logos--duplicate {
+    position: absolute;
+    top: 0;
+    left: 100%;
+  }
+
+  .distributors-brands[data-scroll="true"] .distributors-brands__logos--duplicate .distributors-brands__logos-container {
+    animation: scroll-logos 30s linear infinite;
+  }
+
+  @keyframes scroll-logos {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  .distributors-brands__logo-item {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .distributors-brands__logo-link {
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .distributors-brands__logo-link:hover {
+    transform: translateY(-2px);
+  }
+
+  .distributors-brands__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 140px;
+    height: 80px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+    opacity: var(--logo-opacity, 0.7);
+  }
+
+  .distributors-brands__logo:hover {
+    opacity: var(--logo-hover-opacity, 1);
+    transform: scale(1.05);
+  }
+
+  .distributors-brands__logo img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    filter: grayscale(100%);
+    transition: filter 0.3s ease;
+  }
+
+  .distributors-brands__logo:hover img {
+    filter: grayscale(0%);
+  }
+
+  .distributors-brands__logo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    color: var(--text-color, #333333);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 2px dashed rgba(0, 0, 0, 0.1);
+  }
+
+  .distributors-brands__logo-placeholder span {
+    opacity: 0.6;
+  }
+
+  /* Different Logo Styles */
+  .distributors-brands[data-style="minimal"] .distributors-brands__logo {
+    background-color: transparent;
+    border: none;
+    padding: 0.5rem;
+  }
+
+  .distributors-brands[data-style="bordered"] .distributors-brands__logo {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+
+  .distributors-brands[data-style="shadowed"] .distributors-brands__logo {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+
+  /* Responsive Design */
+  @media screen and (max-width: 968px) {
+    .distributors-brands__logos-container {
+      gap: 2rem;
+    }
+
+    .distributors-brands__logo {
+      width: 120px;
+      height: 70px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .distributors-brands {
+      padding: 40px 0;
+    }
+
+    .distributors-brands__container {
+      padding: 0 1rem;
+    }
+
+    .distributors-brands__header {
+      margin-bottom: 2rem;
+    }
+
+    .distributors-brands__logos-container {
+      gap: 1.5rem;
+    }
+
+    .distributors-brands__logo {
+      width: 100px;
+      height: 60px;
+    }
+
+    /* Disable scroll animation on mobile */
+    .distributors-brands[data-scroll="true"] .distributors-brands__logos-container {
+      animation: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: auto;
+    }
+
+    .distributors-brands[data-scroll="true"] .distributors-brands__logos--duplicate {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .distributors-brands__logos-container {
+      gap: 1rem;
+    }
+
+    .distributors-brands__logo {
+      width: 80px;
+      height: 50px;
+      padding: 0.5rem;
+    }
+  }
+{% endstylesheet %}
+
+<script>
+  class DistributorsBrands {
+    constructor(element) {
+      this.element = element;
+      this.init();
+    }
+
+    init() {
+      // Add scroll animation attribute if enabled
+      if (this.element.dataset.scrollAnimation === 'true') {
+        this.element.setAttribute('data-scroll', 'true');
+      }
+
+      // Pause animation on hover
+      if (this.element.querySelector('.distributors-brands__logos-container')) {
+        this.element.addEventListener('mouseenter', () => {
+          this.pauseAnimation();
+        });
+
+        this.element.addEventListener('mouseleave', () => {
+          this.resumeAnimation();
+        });
+      }
+    }
+
+    pauseAnimation() {
+      const containers = this.element.querySelectorAll('.distributors-brands__logos-container');
+      containers.forEach(container => {
+        container.style.animationPlayState = 'paused';
+      });
+    }
+
+    resumeAnimation() {
+      const containers = this.element.querySelectorAll('.distributors-brands__logos-container');
+      containers.forEach(container => {
+        container.style.animationPlayState = 'running';
+      });
+    }
+  }
+
+  // Initialize distributors brands when DOM is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    const distributorsElements = document.querySelectorAll('.distributors-brands');
+    distributorsElements.forEach(element => {
+      new DistributorsBrands(element);
+    });
+  });
+
+  // Reinitialize on AJAX page loads
+  document.addEventListener('shopify:section:load', (event) => {
+    if (event.target.querySelector('.distributors-brands')) {
+      const element = event.target.querySelector('.distributors-brands');
+      new DistributorsBrands(element);
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Distributors & Brands",
+  "tag": "section",
+  "class": "distributors-brands-wrapper section-wrapper",
+  "max_blocks": 10,
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Brand Logo",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Brand Information"
+        },
+        {
+          "type": "text",
+          "id": "brand_name",
+          "label": "Brand name",
+          "info": "Used for accessibility and fallback text"
+        },
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Logo image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Brand website link"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_in_new_tab",
+          "label": "Open link in new tab",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Distribuidores oficiales"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Trabajamos con las marcas más reconocidas del mercado"
+    },
+    {
+      "type": "header",
+      "content": "Animation & Style"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scroll_animation",
+      "label": "Enable scroll animation",
+      "default": false,
+      "info": "Creates an infinite scrolling effect (disabled on mobile)"
+    },
+    {
+      "type": "select",
+      "id": "logo_style",
+      "label": "Logo style",
+      "options": [
+        {
+          "value": "minimal",
+          "label": "Minimal"
+        },
+        {
+          "value": "bordered",
+          "label": "Bordered"
+        },
+        {
+          "value": "shadowed",
+          "label": "Shadowed"
+        }
+      ],
+      "default": "minimal"
+    },
+    {
+      "type": "range",
+      "id": "logo_opacity",
+      "label": "Logo opacity",
+      "min": 30,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "logo_hover_opacity",
+      "label": "Logo hover opacity",
+      "min": 70,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Distributors & Brands",
+      "category": "Brand",
+      "settings": {
+        "heading": "Distribuidores oficiales",
+        "subheading": "Trabajamos con las marcas más reconocidas del mercado"
+      },
+      "blocks": [
+        {
+          "type": "brand",
+          "settings": {
+            "brand_name": "unimac"
+          }
+        },
+        {
+          "type": "brand",
+          "settings": {
+            "brand_name": "JBE"
+          }
+        },
+        {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Alpromec"
+          }
+        },
+        {
+          "type": "brand",
+          "settings": {
+            "brand_name": "BC"
+          }
+        },
+        {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Nordic"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

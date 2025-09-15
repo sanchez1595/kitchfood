@@ -1,0 +1,451 @@
+<section 
+  class="about-info color-{{ section.settings.color_scheme }}"
+  style="
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --section-bg-color: {{ section.settings.background_color }};
+    --text-color: {{ section.settings.text_color }};
+    --button-bg-color: {{ section.settings.button_background_color }};
+    --button-text-color: {{ section.settings.button_text_color }};
+  "
+>
+  <div class="about-info__container">
+    <div class="about-info__content">
+      <!-- Image Side -->
+      <div class="about-info__image-wrapper">
+        {% if section.settings.image %}
+          <div class="about-info__image">
+            <img 
+              src="{{ section.settings.image | image_url: width: 600 }}"
+              alt="{{ section.settings.image.alt | escape }}"
+              width="{{ section.settings.image.width }}"
+              height="{{ section.settings.image.height }}"
+              loading="lazy"
+            >
+          </div>
+        {% else %}
+          <div class="about-info__image-placeholder">
+            <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+              <rect width="120" height="120" fill="#E5E5E5" rx="8"/>
+              <path d="M40 50L60 70L80 50" stroke="#999" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="60" cy="40" r="8" fill="#999"/>
+            </svg>
+            <p>Imagen de empresa</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Text Content -->
+      <div class="about-info__text-content">
+        {% if section.settings.subtitle != blank %}
+          <div class="about-info__subtitle">{{ section.settings.subtitle }}</div>
+        {% endif %}
+        
+        {% if section.settings.heading != blank %}
+          <h2 class="about-info__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+        
+        {% if section.settings.description != blank %}
+          <div class="about-info__description">
+            {{ section.settings.description | newline_to_br }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.features != blank %}
+          <div class="about-info__features">
+            {% assign features = section.settings.features | split: ',' %}
+            {% for feature in features %}
+              <div class="about-info__feature-item">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M16.667 5L7.5 14.167L3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>{{ feature | strip }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        
+        {% if section.settings.button_text != blank %}
+          <div class="about-info__button-wrapper">
+            <a 
+              href="{{ section.settings.button_link | default: '#' }}" 
+              class="about-info__button"
+              {% if section.settings.button_link == blank %}onclick="return false;"{% endif %}
+              {% if section.settings.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}
+            >
+              {{ section.settings.button_text }}
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .about-info {
+    padding: var(--section-padding-top, 80px) 0 var(--section-padding-bottom, 80px);
+    background-color: var(--section-bg-color, #b8b8b8);
+  }
+
+  .about-info__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .about-info__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .about-info__image-wrapper {
+    position: relative;
+  }
+
+  .about-info__image {
+    width: 100%;
+    height: 400px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .about-info__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .about-info:hover .about-info__image img {
+    transform: scale(1.02);
+  }
+
+  .about-info__image-placeholder {
+    width: 100%;
+    height: 400px;
+    background-color: #f0f0f0;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: #999;
+    border: 2px dashed #ddd;
+  }
+
+  .about-info__image-placeholder p {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .about-info__text-content {
+    color: var(--text-color, #333333);
+  }
+
+  .about-info__subtitle {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--button-bg-color, #ff6b35);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+  }
+
+  .about-info__heading {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    margin: 0 0 1.5rem 0;
+    line-height: 1.2;
+    color: var(--text-color, #333333);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+
+  .about-info__description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    color: var(--text-color, #333333);
+    opacity: 0.9;
+  }
+
+  .about-info__features {
+    margin-bottom: 2.5rem;
+  }
+
+  .about-info__feature-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: var(--text-color, #333333);
+  }
+
+  .about-info__feature-item svg {
+    color: var(--button-bg-color, #ff6b35);
+    flex-shrink: 0;
+  }
+
+  .about-info__button-wrapper {
+    margin-top: 2rem;
+  }
+
+  .about-info__button {
+    display: inline-block;
+    background-color: var(--button-bg-color, #ff6b35);
+    color: var(--button-text-color, #ffffff);
+    padding: 1rem 2.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .about-info__button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+    opacity: 0.9;
+  }
+
+  .about-info__button:active {
+    transform: translateY(0);
+  }
+
+  /* Layout Variations */
+  .about-info[data-layout="image-right"] .about-info__content {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .about-info[data-layout="image-left"] .about-info__content {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .about-info[data-layout="image-left"] .about-info__image-wrapper {
+    order: -1;
+  }
+
+  /* Responsive Design */
+  @media screen and (max-width: 968px) {
+    .about-info__content {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    .about-info[data-layout="image-left"] .about-info__image-wrapper {
+      order: 0;
+    }
+
+    .about-info__image,
+    .about-info__image-placeholder {
+      height: 300px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .about-info {
+      padding: 50px 0;
+    }
+
+    .about-info__container {
+      padding: 0 1rem;
+    }
+
+    .about-info__content {
+      gap: 2rem;
+    }
+
+    .about-info__heading {
+      font-size: clamp(1.5rem, 6vw, 2rem);
+      margin-bottom: 1rem;
+    }
+
+    .about-info__description {
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-info__features {
+      margin-bottom: 2rem;
+    }
+
+    .about-info__button {
+      padding: 0.875rem 2rem;
+      font-size: 0.9rem;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .about-info__image,
+    .about-info__image-placeholder {
+      height: 250px;
+    }
+
+    .about-info__feature-item {
+      font-size: 0.95rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "About Info",
+  "tag": "section",
+  "class": "about-info-wrapper section-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Quienes Somos"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Somos más que un importador"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Con más de 15 años de experiencia en el mercado, nos especializamos en brindar soluciones integrales para cocinas profesionales. Nuestro compromiso va más allá de la venta: ofrecemos asesoramiento técnico, instalación profesional y soporte continuo para garantizar el máximo rendimiento de su inversión."
+    },
+    {
+      "type": "textarea",
+      "id": "features",
+      "label": "Features (comma separated)",
+      "info": "Enter features separated by commas",
+      "default": "Asesoramiento técnico especializado, Instalación profesional certificada, Soporte técnico 24/7, Garantía extendida en todos los productos"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Conoce más"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "Open link in new tab",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Image position",
+      "options": [
+        {
+          "value": "image-left",
+          "label": "Left"
+        },
+        {
+          "value": "image-right",
+          "label": "Right"
+        }
+      ],
+      "default": "image-left"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#b8b8b8"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Button background",
+      "default": "#ff6b35"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Info",
+      "category": "Text",
+      "settings": {
+        "subtitle": "Quienes Somos",
+        "heading": "Somos más que un importador",
+        "description": "Con más de 15 años de experiencia en el mercado, nos especializamos en brindar soluciones integrales para cocinas profesionales. Nuestro compromiso va más allá de la venta: ofrecemos asesoramiento técnico, instalación profesional y soporte continuo para garantizar el máximo rendimiento de su inversión.",
+        "features": "Asesoramiento técnico especializado, Instalación profesional certificada, Soporte técnico 24/7, Garantía extendida en todos los productos",
+        "button_text": "Conoce más",
+        "layout": "image-left"
+      }
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,677 @@
+{% liquid
+  assign form_id = 'newsletter-form-' | append: section.id
+%}
+
+<section 
+  class="newsletter-signup color-{{ section.settings.color_scheme }}"
+  style="
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --overlay-color: {{ section.settings.overlay_color }};
+    --text-color: {{ section.settings.text_color }};
+    --button-bg-color: {{ section.settings.button_background_color }};
+    --button-text-color: {{ section.settings.button_text_color }};
+    --form-bg-color: {{ section.settings.form_background_color }};
+    --input-bg-color: {{ section.settings.input_background_color }};
+    --input-text-color: {{ section.settings.input_text_color }};
+  "
+>
+  <!-- Background Image -->
+  {% if section.settings.background_image %}
+    <div class="newsletter-signup__background">
+      <img 
+        src="{{ section.settings.background_image | image_url: width: 1920 }}"
+        alt="{{ section.settings.background_image.alt | escape }}"
+        width="1920"
+        height="800"
+        loading="lazy"
+      >
+      <div class="newsletter-signup__overlay"></div>
+    </div>
+  {% endif %}
+
+  <div class="newsletter-signup__container">
+    <div class="newsletter-signup__content">
+      {% if section.settings.subtitle != blank %}
+        <div class="newsletter-signup__subtitle">{{ section.settings.subtitle }}</div>
+      {% endif %}
+      
+      {% if section.settings.heading != blank %}
+        <h2 class="newsletter-signup__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+      
+      {% if section.settings.description != blank %}
+        <p class="newsletter-signup__description">{{ section.settings.description }}</p>
+      {% endif %}
+
+      <!-- Newsletter Form -->
+      <div class="newsletter-signup__form-wrapper">
+        {% form 'customer', id: form_id, class: 'newsletter-signup__form' %}
+          {% if form.posted_successfully? %}
+            <div class="newsletter-signup__success" role="status">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>{{ section.settings.success_message | default: '¡Gracias por suscribirte!' }}</span>
+            </div>
+          {% endif %}
+
+          {% if form.errors %}
+            <div class="newsletter-signup__errors" role="alert">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2"/>
+                <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <span>{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</span>
+            </div>
+          {% endif %}
+
+          <div class="newsletter-signup__form-content">
+            <div class="newsletter-signup__input-group">
+              <label for="newsletter-email-{{ section.id }}" class="newsletter-signup__label visually-hidden">
+                {{ section.settings.input_label | default: 'Email' }}
+              </label>
+              <input 
+                type="email" 
+                id="newsletter-email-{{ section.id }}"
+                name="contact[email]"
+                class="newsletter-signup__input"
+                placeholder="{{ section.settings.input_placeholder | default: 'Ingresa tu email' }}"
+                value="{% if customer %}{{ customer.email }}{% endif %}"
+                required
+                aria-describedby="newsletter-description-{{ section.id }}"
+              >
+              <button 
+                type="submit" 
+                class="newsletter-signup__button"
+                aria-label="{{ section.settings.button_text | default: 'SUSCRIBIRSE' }}"
+              >
+                <span>{{ section.settings.button_text | default: 'SUSCRIBIRSE' }}</span>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Hidden fields for Shopify customer creation -->
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <input type="hidden" name="contact[accepts_marketing]" value="true">
+
+            {% if section.settings.show_terms_checkbox %}
+              <div class="newsletter-signup__terms">
+                <label class="newsletter-signup__terms-label">
+                  <input 
+                    type="checkbox" 
+                    name="terms" 
+                    required
+                    class="newsletter-signup__checkbox"
+                  >
+                  <span class="newsletter-signup__checkbox-mark"></span>
+                  <span class="newsletter-signup__terms-text">
+                    {{ section.settings.terms_text | default: 'Acepto los términos y condiciones' }}
+                    {% if section.settings.terms_link != blank %}
+                      <a href="{{ section.settings.terms_link }}" target="_blank" rel="noopener">
+                        {{ section.settings.terms_link_text | default: 'Ver términos' }}
+                      </a>
+                    {% endif %}
+                  </span>
+                </label>
+              </div>
+            {% endif %}
+          </div>
+
+          <div id="newsletter-description-{{ section.id }}" class="newsletter-signup__disclaimer">
+            {{ section.settings.disclaimer | default: 'Recibirás ofertas exclusivas y noticias sobre nuestros productos. Puedes darte de baja en cualquier momento.' }}
+          </div>
+        {% endform %}
+      </div>
+
+      <!-- Trust Indicators -->
+      {% if section.settings.show_trust_indicators %}
+        <div class="newsletter-signup__trust">
+          <div class="newsletter-signup__trust-item">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 1L12.09 6.26L18 7.27L14 11.14L15.18 17.02L10 14.77L4.82 17.02L6 11.14L2 7.27L7.91 6.26L10 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+            <span>Sin spam</span>
+          </div>
+          <div class="newsletter-signup__trust-item">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M15 7L8 14L5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+            <span>Datos seguros</span>
+          </div>
+          <div class="newsletter-signup__trust-item">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M14 7V5C14 3.89543 13.1046 3 12 3H8C6.89543 3 6 3.89543 6 5V7M4 7H16L15 17H5L4 7Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Ofertas exclusivas</span>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .newsletter-signup {
+    position: relative;
+    padding: var(--section-padding-top, 100px) 0 var(--section-padding-bottom, 100px);
+    color: var(--text-color, #ffffff);
+    overflow: hidden;
+    background-color: #333333; /* Fallback color */
+  }
+
+  .newsletter-signup__background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  .newsletter-signup__background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .newsletter-signup__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--overlay-color, rgba(0, 0, 0, 0.6));
+    z-index: 1;
+  }
+
+  .newsletter-signup__container {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    text-align: center;
+  }
+
+  .newsletter-signup__content {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .newsletter-signup__subtitle {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--button-bg-color, #ff6b35);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+  }
+
+  .newsletter-signup__heading {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    margin: 0 0 1.5rem 0;
+    line-height: 1.1;
+    color: var(--text-color, #ffffff);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  .newsletter-signup__description {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin: 0 0 3rem 0;
+    color: var(--text-color, #ffffff);
+    opacity: 0.9;
+  }
+
+  .newsletter-signup__form-wrapper {
+    background-color: var(--form-bg-color, rgba(255, 255, 255, 0.1));
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .newsletter-signup__form-content {
+    margin-bottom: 1.5rem;
+  }
+
+  .newsletter-signup__input-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    align-items: stretch;
+  }
+
+  .newsletter-signup__input {
+    flex: 1;
+    padding: 1.2rem 1.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    background-color: var(--input-bg-color, rgba(255, 255, 255, 0.9));
+    color: var(--input-text-color, #333333);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    min-width: 0;
+  }
+
+  .newsletter-signup__input:focus {
+    outline: none;
+    border-color: var(--button-bg-color, #ff6b35);
+    box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.2);
+    background-color: rgba(255, 255, 255, 1);
+  }
+
+  .newsletter-signup__input::placeholder {
+    color: rgba(51, 51, 51, 0.6);
+  }
+
+  .newsletter-signup__button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--button-bg-color, #ff6b35);
+    color: var(--button-text-color, #ffffff);
+    border: none;
+    padding: 1.2rem 2rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .newsletter-signup__button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+    background-color: #e55a2b;
+  }
+
+  .newsletter-signup__button:active {
+    transform: translateY(0);
+  }
+
+  .newsletter-signup__button svg {
+    transition: transform 0.3s ease;
+  }
+
+  .newsletter-signup__button:hover svg {
+    transform: translateX(2px);
+  }
+
+  .newsletter-signup__terms {
+    margin: 1.5rem 0;
+  }
+
+  .newsletter-signup__terms-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .newsletter-signup__checkbox {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .newsletter-signup__checkbox-mark {
+    display: block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+    background-color: transparent;
+    position: relative;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+  }
+
+  .newsletter-signup__checkbox:checked + .newsletter-signup__checkbox-mark {
+    background-color: var(--button-bg-color, #ff6b35);
+    border-color: var(--button-bg-color, #ff6b35);
+  }
+
+  .newsletter-signup__checkbox:checked + .newsletter-signup__checkbox-mark::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 6px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .newsletter-signup__terms-text a {
+    color: var(--button-bg-color, #ff6b35);
+    text-decoration: underline;
+  }
+
+  .newsletter-signup__disclaimer {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    line-height: 1.4;
+  }
+
+  .newsletter-signup__success,
+  .newsletter-signup__errors {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+  }
+
+  .newsletter-signup__success {
+    background-color: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+  }
+
+  .newsletter-signup__errors {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  .newsletter-signup__trust {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    opacity: 0.8;
+  }
+
+  .newsletter-signup__trust-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  /* Responsive Design */
+  @media screen and (max-width: 768px) {
+    .newsletter-signup {
+      padding: 80px 0;
+    }
+
+    .newsletter-signup__container {
+      padding: 0 1rem;
+    }
+
+    .newsletter-signup__form-wrapper {
+      padding: 2rem 1.5rem;
+    }
+
+    .newsletter-signup__input-group {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .newsletter-signup__button {
+      justify-content: center;
+      width: 100%;
+    }
+
+    .newsletter-signup__trust {
+      gap: 1rem;
+    }
+
+    .newsletter-signup__trust-item {
+      font-size: 0.85rem;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .newsletter-signup__form-wrapper {
+      padding: 1.5rem 1rem;
+    }
+
+    .newsletter-signup__input,
+    .newsletter-signup__button {
+      padding: 1rem 1.5rem;
+    }
+
+    .newsletter-signup__trust {
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Newsletter Signup",
+  "tag": "section",
+  "class": "newsletter-signup-wrapper section-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "OFERTA ESPECIAL"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Reciba un 10% de descuento en tus compras"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Suscríbete a nuestro boletín y recibe ofertas exclusivas, nuevos productos y consejos para tu cocina profesional."
+    },
+    {
+      "type": "header",
+      "content": "Form Settings"
+    },
+    {
+      "type": "text",
+      "id": "input_label",
+      "label": "Input label (for screen readers)",
+      "default": "Email address"
+    },
+    {
+      "type": "text",
+      "id": "input_placeholder",
+      "label": "Input placeholder",
+      "default": "Ingresa tu email"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "SUSCRIBIRSE"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "¡Gracias por suscribirte! Pronto recibirás ofertas exclusivas."
+    },
+    {
+      "type": "textarea",
+      "id": "disclaimer",
+      "label": "Disclaimer text",
+      "default": "Recibirás ofertas exclusivas y noticias sobre nuestros productos. Puedes darte de baja en cualquier momento."
+    },
+    {
+      "type": "header",
+      "content": "Terms & Conditions"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_terms_checkbox",
+      "label": "Show terms checkbox",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "terms_text",
+      "label": "Terms text",
+      "default": "Acepto los términos y condiciones y la política de privacidad"
+    },
+    {
+      "type": "url",
+      "id": "terms_link",
+      "label": "Terms link"
+    },
+    {
+      "type": "text",
+      "id": "terms_link_text",
+      "label": "Terms link text",
+      "default": "Ver términos"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "rgba(0, 0, 0, 0.6)"
+    },
+    {
+      "type": "header",
+      "content": "Trust Indicators"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_indicators",
+      "label": "Show trust indicators",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Button background",
+      "default": "#ff6b35"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "form_background_color",
+      "label": "Form background",
+      "default": "rgba(255, 255, 255, 0.1)"
+    },
+    {
+      "type": "color",
+      "id": "input_background_color",
+      "label": "Input background",
+      "default": "rgba(255, 255, 255, 0.9)"
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "Input text",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter Signup",
+      "category": "Promotional",
+      "settings": {
+        "subtitle": "OFERTA ESPECIAL",
+        "heading": "Reciba un 10% de descuento en tus compras",
+        "description": "Suscríbete a nuestro boletín y recibe ofertas exclusivas, nuevos productos y consejos para tu cocina profesional.",
+        "button_text": "SUSCRIBIRSE",
+        "show_terms_checkbox": true,
+        "show_trust_indicators": true
+      }
+    }
+  ]
+}
+{% endschema %}
