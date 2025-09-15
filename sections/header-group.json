@@ -19,22 +19,22 @@
           "settings": {
             "text": "Uplevel your office with new decor",
             "link": "shopify://collections/all",
-            "font": "var(--font-primary--family)",
-            "font_size": "var(--font-size--body-md)",
-            "weight": "",
+            "font": "var(--font-subheading--family)",
+            "font_size": "1rem",
+            "weight": "700",
             "letter_spacing": "normal",
             "case": "none"
           },
           "blocks": {}
         },
-        "announcement_j3CQ4B": {
+        "announcement_4yirzH": {
           "type": "_announcement",
           "settings": {
             "text": "Uplevel your office with new decor",
             "link": "shopify://collections/all",
-            "font": "var(--font-primary--family)",
-            "font_size": "var(--font-size--body-md)",
-            "weight": "",
+            "font": "var(--font-subheading--family)",
+            "font_size": "1rem",
+            "weight": "700",
             "letter_spacing": "normal",
             "case": "none"
           },
@@ -43,7 +43,7 @@
       },
       "block_order": [
         "announcement_mxxhta",
-        "announcement_j3CQ4B"
+        "announcement_4yirzH"
       ],
       "name": "t:names.announcement_bar",
       "settings": {
